@@ -1,73 +1,96 @@
-# React + TypeScript + Vite
+<a id="readme-top"></a>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<br />
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#kana-training">Kana Training</a>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#running-the-project">Running the Project</a></li>
+      </ul>
+    </li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Kana Training
 
-## React Compiler
+A React-based Japanese Kana (Hiragana/Katakana) quiz app with a spaced repetition system
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/33709f60-4dd5-4cfb-a568-7e8dc72ebf45" />
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Overview
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Kana Training is a web application designed to help users learn and memorize the Japanese Hiragana and Katakana alphabets. It features an adaptive quiz where users match Kana characters to their Romaji equivalents.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+To optimize learning, the app utilizes a spaced repetition system (SRS), which prioritizes characters with lower scores to appear more frequently. New character sets are progressively unlocked as the user demonstrates mastery.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Built With
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+[![React][React.js]][React-url]
+[![Vite][Vite]][Vite-url]
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## Getting Started
+
+To get a local copy of this project up and running, follow these simple steps.
+
+### Prerequisites
+
+Before you begin, make sure you have the following tools installed on your machine:
+
+* **Git**: For cloning the repository.
+* **Node.js**: Includes npm, which is necessary for running JavaScript projects.
+* **pnpm**: A fast, disk space efficient package manager.
+
+It's also recommended to use a code editor like [VSCode](https://code.visualstudio.com/) for a better development experience.
+
+### Running the Project
+
+1.  **Clone this repository:**
+    ```bash
+    git clone https://github.com/Batsy13/kana-training.git
+    ```
+2.  **Navigate to the project folder:**
+    ```bash
+    cd kana-training
+    ```
+3.  **Install the dependencies:**
+    ```bash
+    pnpm install
+    ```
+4.  **Run the application in development mode:**
+    ```bash
+    pnpm run dev
+    ```
+
+---
+
+## Contact
+
+Feel free to connect with me!
+
+* **LinkedIn**: [@Pedro Costa](https://www.linkedin.com/in/pedro-costa-b189262b3/)
+* **Project Link**: [Bat/ui on GitHub](https://github.com/Batsy13/kana-training)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[Vite]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white
+[Vite-url]: https://vite.dev/
+[React-url]: https://reactjs.org/
