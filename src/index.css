@@ -170,6 +170,23 @@ h2 {
   color: #dc3545;
 }
 
+.random-button {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: fit-content;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 10;
+}
+
 @media (max-width: 400px) {
   .quiz-container {
     padding: 1.5rem 1rem;

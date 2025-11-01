@@ -38,6 +38,21 @@ const initializeStats = (data: CharacterSections): CharacterStats => {
   return stats;
 };
 
+const initializeRandomModeStats = (
+  data: CharacterSections
+): CharacterStats => {
+  const stats: CharacterStats = {};
+  for (const section of data) {
+    for (const item of section) {
+      stats[item.romaji] = {
+        hasBeenSeen: true,
+        correctCount: 10,
+      };
+    }
+  }
+  return stats;
+};
+
 const GameLayout: React.FC<GameLayoutProps> = ({ data, gameTitle }) => {
   const [characterStats, setCharacterStats] = useState<CharacterStats>(() =>
     initializeStats(data)
@@ -49,6 +64,7 @@ const GameLayout: React.FC<GameLayoutProps> = ({ data, gameTitle }) => {
   const [options, setOptions] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [borderColor, setBorderColor] = useState<string>('');
+  const [isRandomMode, setIsRandomMode] = useState(false);
 
   const currentStats = characterStats[currentCharacter.romaji];
 
@@ -96,29 +112,43 @@ const GameLayout: React.FC<GameLayoutProps> = ({ data, gameTitle }) => {
       return unseenInPool[0];
     }
 
-    const weightedPool = availablePool.map((char) => {
+    let selectionPool = availablePool;
+    if (availablePool.length > 1) {
+      selectionPool = availablePool.filter(
+        (char) => char.romaji !== currentCharacter.romaji
+      );
+    }
+
+    const weightedPool = selectionPool.map((char) => {
       const score = updatedStats[char.romaji].correctCount;
+
+      if (score >= MASTERY_SCORE) {
+        return { char, weight: 0.1 };
+      }
+
       const baseWeight = MASTERY_SCORE - score + 1;
       const weight = Math.max(1, Math.pow(baseWeight, 2));
       return { char, weight };
     });
 
     const totalWeight = weightedPool.reduce((sum, item) => sum + item.weight, 0);
+
+    if (totalWeight === 0) {
+      return selectionPool[
+        Math.floor(Math.random() * selectionPool.length)
+      ] || availablePool[0];
+    }
+
     let randomVal = Math.random() * totalWeight;
 
     for (const item of weightedPool) {
       randomVal -= item.weight;
       if (randomVal <= 0) {
-        if (
-          item.char.romaji === currentCharacter.romaji &&
-          availablePool.length > 1
-        ) {
-          continue;
-        }
         return item.char;
       }
     }
-    return availablePool[0];
+
+    return selectionPool[0] || availablePool[0];
   };
 
   const goToNext = (
@@ -163,7 +193,7 @@ const GameLayout: React.FC<GameLayoutProps> = ({ data, gameTitle }) => {
     setFeedback(feedbackMessage);
 
     let nextAvailableSectionIndex = availableSectionIndex;
-    if (availableSectionIndex < data.length - 1) {
+    if (!isRandomMode && availableSectionIndex < data.length - 1) {
       const currentSection = data[availableSectionIndex];
       const masteredCount = currentSection.filter(
         (char) => newStats[char.romaji].correctCount >= UNLOCK_SCORE
@@ -180,42 +210,69 @@ const GameLayout: React.FC<GameLayoutProps> = ({ data, gameTitle }) => {
     }, 700);
   };
 
+  const toggleGameMode = () => {
+    if (isRandomMode) {
+      const newStats = initializeStats(data);
+      const newIndex = 0;
+      setCharacterStats(newStats);
+      setAvailableSectionIndex(newIndex);
+      setIsRandomMode(false);
+      goToNext(newStats, newIndex);
+    } else {
+      const newStats = initializeRandomModeStats(data);
+      const newIndex = data.length - 1;
+      setCharacterStats(newStats);
+      setAvailableSectionIndex(newIndex);
+      setIsRandomMode(true);
+      goToNext(newStats, newIndex);
+    }
+  };
+
   return (
-    <div className={`quiz-container ${borderColor}`}>
-      {feedback && (
-        <div
-          className={`feedback ${
-            feedback.includes('Correct') || feedback.includes('Mastered')
-              ? 'correct'
-              : 'incorrect'
-          }`}
-        >
-          {feedback}
-        </div>
-      )}
-      <div className="stats-header">
-        <NavLink to="/" className="back-link">
-          <ChevronLeft />
-        </NavLink>
-        <h3>{gameTitle}</h3>
-        <p>
-          Score for {currentCharacter.kana}: {currentStats.correctCount}
-        </p>
-      </div>
-      <div className="character-display">{currentCharacter.kana}</div>
-      <div className="options-grid">
-        {options.map((option) => (
-          <button
-            key={option}
-            onClick={() => handleAnswer(option)}
-            disabled={!!feedback}
-            className="option-button"
+    <>
+      <div className={`quiz-container ${borderColor}`}>
+        {feedback && (
+          <div
+            className={`feedback ${feedback.includes('Correct') || feedback.includes('Mastered')
+                ? 'correct'
+                : 'incorrect'
+              }`}
           >
-            {option}
-          </button>
-        ))}
+            {feedback}
+          </div>
+        )}
+        <div className="stats-header">
+          <NavLink to="/" className="back-link">
+            <ChevronLeft />
+          </NavLink>
+          <h3>{gameTitle}</h3>
+          <p>
+            Score for {currentCharacter.kana}: {currentStats.correctCount}
+          </p>
+        </div>
+        <div className="character-display">{currentCharacter.kana}</div>
+        <div className="options-grid">
+          {options.map((option) => (
+            <button
+              key={option}
+              onClick={() => handleAnswer(option)}
+              disabled={!!feedback}
+              className="option-button"
+            >
+              {option}
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+      <button
+        onClick={toggleGameMode}
+        className="random-button"
+      >
+        {isRandomMode
+          ? 'Sequencial mode (All lvl 0)'
+          : 'Random Mode (All lvl 10)'}
+      </button>
+    </>
   );
 };
 
